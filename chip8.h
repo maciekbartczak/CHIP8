@@ -7,6 +7,7 @@ public:
 	Chip8();
 	bool loadROM(const char* filename);
 	void run_cycle();
+	void decrement_timers();
 	bool draw;
 	uint8_t gfx_mem[64 * 32]{};
 	bool keypad[16]{};
@@ -22,5 +23,6 @@ private:
 	void runOpcode(uint16_t opcode);
 	uint8_t timer_delay{};
 	uint8_t timer_sound{};
+	
 
 };

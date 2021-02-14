@@ -9,6 +9,13 @@ const int SCREEN_HEIGHT = 768;
 
 using namespace std;
 
+const int keymap[] = {
+	SDLK_1, SDLK_2, SDLK_3, SDLK_4,
+	SDLK_q, SDLK_w, SDLK_e, SDLK_r,
+	SDLK_a, SDLK_s, SDLK_d, SDLK_f,
+	SDLK_z, SDLK_x, SDLK_c, SDLK_v
+};
+
 int main(int argc, char** argv) {
 	if (argc < 2) {
 		cout << "usage: CHIP8 <filename>" << endl;
@@ -45,6 +52,19 @@ int main(int argc, char** argv) {
 				case SDL_QUIT:
 					run = false;
 					break;
+				case SDL_KEYDOWN:
+					for (int i = 0; i < 16; i++) {
+						if (event.key.keysym.sym == keymap[i]) {
+							chip8.keypad[i] = true;
+						}
+					}
+					break;
+				case SDL_KEYUP:
+					for (int i = 0; i < 16; i++) {
+						if (event.key.keysym.sym == keymap[i]) {
+							chip8.keypad[i] = false;
+						}
+					}
 			}
 		}
 		if (chip8.draw) {
@@ -54,7 +74,8 @@ int main(int argc, char** argv) {
 			SDL_RenderCopy(renderer, texture, NULL, NULL);
 			SDL_RenderPresent(renderer);
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(25));
+		chip8.decrement_timers();
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);

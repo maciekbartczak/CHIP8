@@ -237,3 +237,13 @@ void Chip8::runOpcode(uint16_t opcode)
     }
 }
 
+void Chip8::decrement_timers()
+{
+    if (timer_delay > 0) {
+        timer_delay--;
+    }
+    if (timer_sound > 0) {
+        timer_sound--;
+    }
+}
+
