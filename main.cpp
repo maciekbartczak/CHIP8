@@ -36,7 +36,6 @@ int main(int argc, char** argv) {
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332,
 			  SDL_TEXTUREACCESS_STATIC, 64, 32);
 
-	uint8_t buffer[64 * 32];
 	SDL_Event event;
 	bool run = true;
 	while (run) {
@@ -50,18 +49,12 @@ int main(int argc, char** argv) {
 		}
 		if (chip8.draw) {
 			chip8.draw = false;
-			std::copy(chip8.gfx_mem, chip8.gfx_mem + 2048, buffer);
-			for (auto& pixel : buffer) {
-				if (pixel) {
-					pixel = 0xFF;
-				}
-			}
-			SDL_UpdateTexture(texture, NULL,buffer,64*sizeof(uint8_t));
+			SDL_UpdateTexture(texture, NULL,chip8.gfx_mem,64*sizeof(uint8_t));
 			SDL_RenderClear(renderer);
 			SDL_RenderCopy(renderer, texture, NULL, NULL);
 			SDL_RenderPresent(renderer);
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);

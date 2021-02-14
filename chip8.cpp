@@ -63,7 +63,7 @@ uint16_t Chip8::getOpcode()
 
 void Chip8::runOpcode(uint16_t opcode)
 {
-    std::cout << "[INFO] RUNNING OPCODE " << std::hex << opcode << std::endl;
+    std::cout << "RUNNING OPCODE " << std::hex << opcode << std::endl;
     uint16_t nnn = opcode & 0x0FFF;
     uint8_t n = opcode & 0x000F;
     uint8_t x = (opcode & 0x0F00) >> 8;
@@ -126,8 +126,10 @@ void Chip8::runOpcode(uint16_t opcode)
         V[x] -= V[y];
     }
     else if ((opcode & 0xF00F) == 0x8006) {
-        V[0xF] = (V[x] & 0x1);
-        V[x] /= 2;
+        V[0xF] = V[(opcode & 0x0F00) >> 8] & 0x1;
+        V[(opcode & 0x0F00) >> 8] >>= 1;
+      /*  V[0xF] = V[x] & 0x1;
+        V[x] >>= 1;*/
     }
     else if ((opcode & 0xF00F) == 0x8007) {
         V[0xF] = (V[y] > V[x]);
@@ -166,7 +168,8 @@ void Chip8::runOpcode(uint16_t opcode)
                     if (gfx_mem[x_val + j + (y_val * 64)]) {
                         V[0xF] = 1;
                     }
-                    gfx_mem[x_val + j + (y_val * 64)] ^= 1;
+                    //0xFF for SDL pixel format
+                    gfx_mem[x_val + j + (y_val * 64)] ^= 0xFF;
                 }
                 if (x_val + j == 64) {
                     break;
@@ -175,8 +178,62 @@ void Chip8::runOpcode(uint16_t opcode)
         }
         draw = true;
     }
+    else if ((opcode & 0xF0FF) == 0xE09E) {
+        if (keypad[V[x]]) {
+                pc += 2;
+            }
+    }
+    else if ((opcode & 0xF0FF) == 0xE0A1) {
+        if (!keypad[V[x]]) {
+            pc += 2;
+        }
+    }
+    else if ((opcode & 0xF0FF) == 0xF007) {
+        V[x] = timer_delay;
+    }
+    else if ((opcode & 0xF0FF) == 0xF00A) {
+        bool pressed = false;
+        for (int i = 0; i < 16; i++) {
+            if (keypad[i]) {
+                pressed = true;
+                V[x] = i;
+            }
+        }
+        if (!pressed) {
+            pc -= 2;
+        }
+    }
+    else if ((opcode & 0xF0FF) == 0xF015) {
+        timer_delay = V[x];
+    }
+    else if ((opcode & 0xF0FF) == 0xF018) {
+        timer_sound = V[x];
+    }
+    else if ((opcode & 0xF0FF) == 0xF01E) {
+        I += V[x];
+    }
+    else if ((opcode & 0xF0FF) == 0xF029) {
+        I = 5 * V[x];
+    }
+    else if ((opcode & 0xF0FF) == 0xF033) {
+        uint8_t value = V[x];   
+        for (int i = 2; i >= 0; i--) {
+            mem[I + i] = value % 10;
+            value /= 10;
+        }
+    }
+    else if ((opcode & 0xF0FF) == 0xF055) {
+        for (int i = 0; i <= x; i++) {
+            mem[I + i] = V[i];
+        }
+    }
+    else if ((opcode & 0xF0FF) == 0xF065) {
+        for (int i = 0; i <= x; i++) {
+            V[i] = mem[I + i];
+        }
+    }
     else {
-        std::cout << "opcode " << opcode << " not implemented" << std::endl;
+        std::cout << "unknow opcode " << std::hex << opcode << std::endl;
     }
 }
 

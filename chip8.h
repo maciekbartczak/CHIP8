@@ -9,6 +9,7 @@ public:
 	void run_cycle();
 	bool draw;
 	uint8_t gfx_mem[64 * 32]{};
+	bool keypad[16]{};
 private:
 	uint8_t mem[4096]{};
 	uint8_t V[16]{};
@@ -19,5 +20,7 @@ private:
 	void runCycle();
 	uint16_t getOpcode();
 	void runOpcode(uint16_t opcode);
+	uint8_t timer_delay{};
+	uint8_t timer_sound{};
 
 };
