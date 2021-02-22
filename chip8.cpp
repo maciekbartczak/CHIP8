@@ -31,12 +31,12 @@ Chip8::Chip8()
 
 bool Chip8::loadROM(const char* filename)
 {
-    if (filename == NULL) {
+    if (filename == nullptr) {
         perror("Filename not provided");
         return false;
     }
     FILE* f = fopen(filename, "rb");
-    if (f == NULL) {
+    if (f == nullptr) {
         perror("Error while opening file");
         return false;
     }
@@ -233,7 +233,7 @@ void Chip8::runOpcode(uint16_t opcode)
         }
     }
     else {
-        std::cout << "unknow opcode " << std::hex << opcode << std::endl;
+        std::cout << "unknown opcode " << std::hex << opcode << std::endl;
     }
 }
 

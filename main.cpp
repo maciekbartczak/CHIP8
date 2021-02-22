@@ -1,6 +1,6 @@
 #include "chip8.h"
 #include <iostream>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <chrono>
 #include <thread>
 
@@ -22,20 +22,20 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	Chip8 chip8;
-	if (chip8.loadROM(argv[1]) == false) {
+	if (!chip8.loadROM(argv[1])) {
 		return 2;
 	}
 
-	SDL_Window* window = NULL;
-	SDL_Renderer* renderer = NULL; 
-	SDL_Texture* texture = NULL;
+	SDL_Window* window = nullptr;
+	SDL_Renderer* renderer = nullptr;
+	SDL_Texture* texture = nullptr;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		cout << "SDL_Init error " << SDL_GetError() << endl;
 		return 3;
 	}
 	window = SDL_CreateWindow("CHIP8", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 							  SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (window == NULL) {
+	if (window == nullptr) {
 		cout << "SDL_CreateWindow error " << SDL_GetError() << endl;
 		return 3;
 	}
@@ -69,9 +69,9 @@ int main(int argc, char** argv) {
 		}
 		if (chip8.draw) {
 			chip8.draw = false;
-			SDL_UpdateTexture(texture, NULL,chip8.gfx_mem,64*sizeof(uint8_t));
+			SDL_UpdateTexture(texture, nullptr,chip8.gfx_mem,64*sizeof(uint8_t));
 			SDL_RenderClear(renderer);
-			SDL_RenderCopy(renderer, texture, NULL, NULL);
+			SDL_RenderCopy(renderer, texture, nullptr, nullptr);
 			SDL_RenderPresent(renderer);
 		}
 		chip8.decrement_timers();

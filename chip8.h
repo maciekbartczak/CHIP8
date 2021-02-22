@@ -1,5 +1,4 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
 #include <cstdint>
 
 class Chip8 {
@@ -18,7 +17,6 @@ private:
 	uint16_t stack[16]{};
 	uint8_t sp{};
 	uint16_t pc;
-	void runCycle();
 	uint16_t getOpcode();
 	void runOpcode(uint16_t opcode);
 	uint8_t timer_delay{};
