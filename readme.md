@@ -1,5 +1,7 @@
 # CHIP8 Emulator
 
+![](chip8.gif)
+
 ## About project
 This is a CHIP8 emulator written in c++ using SDL2. Written to learn more about low-level stuff after my computer architecture classes.
 Tested with few roms, all seem to be working, also testing roms pass with no problem.
